@@ -51,3 +51,4 @@ def get_recommendation(body: AnswerRequest):
     answers = body.model_dump(exclude_none=True)
     result = recommend(answers, top_n=5)
     return result
+

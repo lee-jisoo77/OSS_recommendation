@@ -1,7 +1,7 @@
 import streamlit as st
-import requests
+import requests 
 
-BACKEND_URL = "http://back:8000"
+BACKEND_URL = "http://localhost:8000"
 
 st.set_page_config(
     page_title="🎬 한국영화 추천",

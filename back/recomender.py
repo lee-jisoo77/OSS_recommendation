@@ -3,7 +3,7 @@ import random
 from collections import defaultdict
 
 # 영화 데이터 로드
-with open("data/movie.jason", encoding="utf-8") as f:
+with open("movie.json", encoding="utf-8") as f:
     MOVIES = json.load(f)
 
 
