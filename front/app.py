@@ -9,9 +9,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# ─────────────────────────────────────────────
-# 질문 목록 가져오기
-# ─────────────────────────────────────────────
+
 @st.cache_data
 def fetch_questions():
     try:
@@ -23,9 +21,7 @@ def fetch_questions():
 
 questions = fetch_questions()
 
-# ─────────────────────────────────────────────
-# session_state 초기화
-# ─────────────────────────────────────────────
+
 if "step" not in st.session_state:
     st.session_state.step = 0         # 현재 질문 번호
 if "answers" not in st.session_state:
@@ -33,21 +29,17 @@ if "answers" not in st.session_state:
 if "result" not in st.session_state:
     st.session_state.result = None    # 추천 결과
 
-# ─────────────────────────────────────────────
-# 진행 상태 표시
-# ─────────────────────────────────────────────
+
 total = len(questions)
 step = st.session_state.step
 
 st.title("🎬 나에게 딱 맞는 한국영화 추천")
 st.caption("8가지 질문으로 당신의 성향을 파악해 영화를 추천해드립니다.")
 
-# ─────────────────────────────────────────────
-# 질문 화면
-# ─────────────────────────────────────────────
+
 if questions and step < total and st.session_state.result is None:
 
-    # 진행 바
+  
     st.progress(step / total, text=f"{step + 1} / {total}")
     st.divider()
 
@@ -102,12 +94,26 @@ if questions and step < total and st.session_state.result is None:
                         except Exception as e:
                             st.error(f"추천 요청 실패: {e}")
 
-# ─────────────────────────────────────────────
-# 결과 화면
-# ─────────────────────────────────────────────
+
 elif st.session_state.result:
     result = st.session_state.result
 
+    TYPE_EMOJI = {
+        "통쾌/유쾌형":   "😂",
+        "긴장/스릴형":   "😰",
+        "감동/눈물형":   "😢",
+        "공포/불안형":   "😱",
+        "묵직/사색형":   "🤔",
+        "로맨스/설렘형": "💕",
+        "역사/전쟁형":   "⚔️",
+        "성장/청춘형":   "🌱",
+        "SF/판타지형":   "🚀",
+        "범죄/누아르형": "🕵️",
+    }
+
+    emoji = TYPE_EMOJI.get(result['type'], "🎬")
+    st.markdown(f"<div style='text-align:center; font-size:120px'>{emoji}</div>", unsafe_allow_html=True)
+    st.write("")
     st.success(f"당신은 **{result['type']}** 입니다!")
     st.info(f"💡 {result['description']}")
     st.divider()
@@ -119,7 +125,6 @@ elif st.session_state.result:
             st.markdown(f"**줄거리** : {movie['summary']}")
 
     st.divider()
-    # 다시 하기 버튼
     if st.button("🔄 다시 추천받기", use_container_width=True):
         st.session_state.step = 0
         st.session_state.answers = {}
